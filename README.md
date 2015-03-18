@@ -3,6 +3,7 @@
 Arduino Uno
 
 Bluetooth low energy sheild: http://www.makershed.com/products/bluetooth-low-energy-ble-shield-for-arduino-2-0
+http://www.instructables.com/id/Androino-Talk-with-an-Arduino-from-your-Android-d/
 
 Adafruit RGB sensors - 10: https://learn.adafruit.com/adafruit-color-sensors/overview
 
