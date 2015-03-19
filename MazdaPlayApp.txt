@@ -1,0 +1,133 @@
+//pseudocode for the Mazda Play game app
+//in kind of C++ I guess
+//for illustrative purposes: will not work in any way
+//MCR 2015
+
+//Race - Laps around the board. Uses two color sensors, one in each lane, to track lap times, as well as order of finishers. Usable for 1, 3, or 5 laps.
+//Scavenger hunt - App will display and announce (randomized) name of the building players must go to. The first car detected by the active color sensor is the winner.- Building list: Home, Gas Station, School, Grocery Store, Hospital, Library, Park, Post office, Police Dept., Bank
+//Story Mode - The player(s) will be given a task prompted by the app. To continue with the story, a player must make it to the active color sensor. Some tasks may be timed. Each task will be associated with a specific building.
+//Free Play - All building color sensors are active, the player(s) are able to do anything they'd like, however, when at a building, app will make the appropriate corresponding sounds or other interactive display.
+
+struct raceData(int n){
+    int carNo = 9;
+    time[n] laps;
+    int curLap = 0;
+};
+
+struct storyData{
+    string prompt;
+    int building;
+    int time = 0;
+}
+
+storyData[10] = {
+    {"lorem ipsum", 0, 10},
+    {"lorem ipsum", 2, 10},
+    {"lorem ipsum", 3, 10},
+    {"lorem ipsum", 4, 10},
+    {"lorem ipsum", 5, 10},
+    {"lorem ipsum", 6, 10},
+    {"lorem ipsum", 7, 10},
+    {"lorem ipsum", 8, 10},
+    {"lorem ipsum", 9, 10},
+    {"lorem ipsum", 10, 10}
+};
+
+string[10] freeMessages = ["lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum", "lorem ipsum"];
+
+string[8] cars = ['Mazda2', 'Mazda3 Hatchback', 'Mazda3 Sedan', 'Mazda6', 'Mazda5', 'Mazda CX-5', 'Mazda CX-9', 'Mazda Miata'];
+
+string[10] buildings = ['Home', 'Gas Station', 'School', 'Grocery Store', 'Hospital', 'Library', 'Park', 'Post office', 'Police Department', 'Bank'];
+
+string[4] games = ['race', 'scav', 'story', 'free'];
+
+while(1){
+    //start a game
+    game = /*the game that was selected*/;
+    if(game=='race'){
+        int laps = /*entered number of laps*/;
+        raceData(laps)[4] curRace;
+    }
+    bool inGame = true;
+    int sensor;
+    int color;
+
+    switch(game){
+        case 'race':
+            time start = now();
+            while(inGame){
+                if(/*bluetooth data available*/){
+                    sensor = data[0];
+                    color = data[1];
+                    //get the right raceData from curRace
+                    for(int i=0; i<4; i++){
+                        raceData* thisCar = curRace[0];
+                        if(thisCar.carNo==9){
+                            thisCar.carNo = color;
+                            break;
+                        }
+                        if(thisCar.carNo==color){
+                            break;
+                        }
+                    }
+                    //add info as appropriate
+                    thisCar.curLap += 1;
+                    if(thisCar.curLap==1){
+                        thisCar.time[1] = now() - start;
+                    }else{
+                        thisCar.time[thisCar.curLap] = now() -  thisCar.time[thisCar.curLap-1];
+                    }
+                    
+                    //if they finished the last lap, declare a winner and exit
+                    if(thisCar.curLap==laps){
+                        print cars[thisCar.carNo] + " has won!";
+                    }
+                }
+            }
+            break;
+        case 'scav':
+            int rand = random(0, 9);
+            print "Go to the "+buildings[rand];
+            while(inGame){
+                if(/*bluetooth data available*/){
+                    sensor = data[0];
+                    color = data[1];
+                    if(sensor==rand){
+                        print cars[color] + " has won!";
+                        inGame = false;
+                    }
+                }
+            }
+            break;
+        case 'story':
+            for story in storyData{
+                timestamp start = 0;
+                print story.prompt;
+                if(story.time != 0){
+                    start = now();
+                }
+                if(/*bluetooth data available*/){
+                    sensor = data[0];
+                    color = data[1];
+                    if(sensor==story.building){
+                        if(story.time!=0 && now() - now < story.time){
+                            print cars[color] + " did it!";
+                        }
+                    }
+                }
+            }
+            break;
+        case 'free':
+            while(inGame){
+                if(/*exit*/){
+                    inGame = false;
+                }
+                if(/*bluetooth data available*/){
+                    sensor = data[0];
+                    print freeMessages[sensor];
+                }
+            }
+            break;
+    }
+}
+
